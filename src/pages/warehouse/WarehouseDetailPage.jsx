@@ -37,7 +37,7 @@ const WarehouseDetailPage = () => {
       });
     }
   };
-  const cancel = (e) => {
+  const cancel = () => {
     message.error("Click on No");
   };
 
@@ -64,8 +64,8 @@ const WarehouseDetailPage = () => {
       </Popconfirm>
 
       <ul>
-        {Object.keys(warehouse).map((key) => (
-          <p>
+        {Object.keys(warehouse).map((key, i) => (
+          <p key={i}>
             {key}:{warehouse[key]}
           </p>
         ))}

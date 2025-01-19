@@ -88,3 +88,32 @@ export const deleteWarehouseById = (id) => {
     }
   };
 };
+
+export const createWarehouse = (data) => {
+  return async (dispatch) => {
+    const handleCreateWarehouse = async (data) => {
+      const token = sessionStorage.getItem("token");
+      const response = await axiosInstance.post(`/warehouses`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          DOLAPIKEY: token,
+        },
+      });
+      console.log("response create warehouse", response);
+      return response;
+    };
+
+    try {
+      const res = await handleCreateWarehouse(data);
+      console.log("response create warehouse", res);
+
+      if (res.status == 200) {
+        // dispatch(warehouseActions.removeWarehouse());
+      }
+
+      return res;
+    } catch (error) {
+      return error;
+    }
+  };
+};
