@@ -15,6 +15,7 @@ import Drivers from "./pages/drivers/drivers.jsx";
 import Shipments from "./pages/shipments/Shipments.jsx";
 import Jobs from "./pages/jobs/Jobs.jsx";
 import Map from "./pages/map/Map.jsx";
+import WarehouseDetailPage from "./pages/warehouse/WarehouseDetailPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,17 @@ const router = createBrowserRouter([
       <App state="private">
         <PrivateRoute>
           <Warehouse />
+        </PrivateRoute>
+      </App>
+    ),
+    loader: () => Promise.resolve({}),
+  },
+  {
+    path: "/warehouses/:id",
+    element: (
+      <App state="private">
+        <PrivateRoute>
+          <WarehouseDetailPage />
         </PrivateRoute>
       </App>
     ),

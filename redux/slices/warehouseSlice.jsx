@@ -10,6 +10,14 @@ const warehouseSlice = createSlice({
     setWarehouses: (state, action) => {
       state.warehouses = action.payload;
     },
+
+    setWarehouse: (state, action) => {
+      state.warehouse = action.payload;
+    },
+    removeWarehouse: (state) => {
+      // call when you delete warehouse to remove from state
+      state.warehouse = {};
+    },
   },
 });
 
