@@ -18,7 +18,7 @@ const WarehouseDetailPage = () => {
   const getCommonHandler = async () => {
     await dispatch(getWarehouseById(warehouseId));
   };
-  const confirm = async (e) => {
+  const confirm = async () => {
     const response = await dispatch(deleteWarehouseById(warehouseId));
 
     if (response.status == 200) {

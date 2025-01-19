@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css";
 import App from "./App.jsx";
 import { Provider } from "react-redux";
 import store from "../redux/store.jsx";
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import Login from "./pages/login/Login.jsx";
 import Dashboard from "./pages/dashboard/Dashboard.jsx";
 import PrivateRoute from "./components/privateRoute/PrivateRouter.jsx";
@@ -125,6 +125,10 @@ const router = createBrowserRouter([
       </App>
     ),
     loader: () => Promise.resolve({}),
+  },
+  {
+    path: "*",
+    element: <Navigate to="/dashboard" replace />,
   },
 ]);
 ReactDOM.createRoot(document.getElementById("root")).render(

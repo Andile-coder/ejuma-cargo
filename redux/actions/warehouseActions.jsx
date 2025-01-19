@@ -90,7 +90,7 @@ export const deleteWarehouseById = (id) => {
 };
 
 export const createWarehouse = (data) => {
-  return async (dispatch) => {
+  return async () => {
     const handleCreateWarehouse = async (data) => {
       const token = sessionStorage.getItem("token");
       const response = await axiosInstance.post(`/warehouses`, data, {

@@ -6,7 +6,6 @@ import {
   getWarehouses,
 } from "../../../redux/actions/warehouseActions";
 import CreateWarehouseForm from "../../components/forms/warehouse/CreateWarehouseForm";
-import { notification } from "antd";
 
 const Warehouse = () => {
   const dispatch = useDispatch();
