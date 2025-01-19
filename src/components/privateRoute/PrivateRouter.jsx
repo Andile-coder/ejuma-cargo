@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router";
+import { getUserInfo } from "../../../redux/actions/authActions";
 
 const PrivateRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const isLogged = useSelector((state) => state.auth.isLogged);
 
   const checkUser = async () => {
     console.log(isLogged);
+    await dispatch(getUserInfo());
     setLoading(false);
   };
   useEffect(() => {
     checkUser();
-  }, [dispatch]);
+  }, []);
 
   if (loading) {
     return (
@@ -24,7 +25,7 @@ const PrivateRoute = ({ children }) => {
     );
   } else if (isLogged == true && loading == false) {
     return <div>{children}</div>;
-  } else {
+  } else if (isLogged == false && loading == false) {
     return <Navigate to="/login" />;
   }
 };

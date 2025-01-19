@@ -2,19 +2,36 @@ import React from "react";
 import { Flex, Layout } from "antd";
 const { Header, Footer, Sider, Content } = Layout;
 import { Button, Checkbox, Form, Input } from "antd";
+
 import { useDispatch } from "react-redux";
 import { login, getUserInfo } from "../../../redux/actions/authActions";
+import { Divider, notification, Space } from "antd";
+import { useNavigate } from "react-router";
 const Login = () => {
   const dispatch = useDispatch();
-  const handleLogin = async () => {
-    const response = await dispatch(
-      login({ username: "andile", password: "WOZUBERLIN_2025", reset: 0 })
-    );
+  const navigate = useNavigate();
+  const [api, contextHolder] = notification.useNotification();
 
-    console.log(response);
-  };
-  const handleGetUser = async () => {
-    const response = await dispatch(getUserInfo("test"));
+  const handleLogin = async (e) => {
+    const response = await dispatch(
+      login({ username: e.username, password: e.password, reset: 0 })
+    );
+    if (response.status == 200) {
+      api.success({
+        message: "Login Successful!",
+        description: `${response.data.success.message}`,
+      });
+
+      setTimeout(function () {
+        navigate("/dashboard");
+      }, 3000);
+    } else {
+      api.error({
+        message: "Login Failed!",
+        description: `${response.response.data.error.message}`,
+      });
+    }
+
     console.log(response);
   };
 
@@ -27,47 +44,40 @@ const Login = () => {
     height: 64,
     paddingInline: 48,
     lineHeight: "64px",
-    // backgroundColor: "#4096ff",
   };
   const contentStyle = {
-    backgroundColor: "#4096ff",
     alignItems: "center",
-    // display: "flex",
-    // justifyContent: "center",
+    display: "flex",
+    justifyContent: "center",
   };
 
   const footerStyle = {
     textAlign: "center",
     color: "#fff",
-    // backgroundColor: "#4096ff",
   };
   const layoutStyle = {
     overflow: "hidden",
-    // width: "calc(50% - 8px)",
-    // maxWidth: "calc(50% - 8px)",
+    height: "100vh",
   };
 
   return (
     <Layout style={layoutStyle}>
-      <Header style={headerStyle}>Header</Header>
+      {contextHolder}
+      <Header style={headerStyle}>Ejuma Cargo</Header>
       <Content style={contentStyle}>
         <Form
           name="basic"
-          labelCol={{
-            span: 24,
-          }}
-          wrapperCol={{
-            span: 48,
-          }}
+          layout="vertical"
+          wrapperCol={{}}
           style={{
-            maxWidth: 600,
+            width: 400,
+            height: 400,
           }}
           onFinish={handleLogin}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
           <Form.Item
-            layout="vertical"
             label="Username"
             name="username"
             rules={[
@@ -81,7 +91,6 @@ const Login = () => {
           </Form.Item>
 
           <Form.Item
-            layout="vertical"
             label="Password"
             name="password"
             rules={[
