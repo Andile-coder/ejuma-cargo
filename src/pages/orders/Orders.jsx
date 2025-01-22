@@ -1,31 +1,33 @@
 import { useEffect, useState } from "react";
 import { Button, Space, Table, Flex, Modal } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { getShipments } from "../../../redux/actions/shipmentActions";
-import CreateWarehouseForm from "../../components/forms/warehouse/CreateWarehouseForm";
-const Shipments = () => {
+import { createOrder, getOrders } from "../../../redux/actions/orderActions";
+import CreateOrderForm from "../../components/forms/order/CreateOrderForm";
+const Orders = () => {
   const dispatch = useDispatch();
-  const shipments = useSelector((state) => state.shipment?.shipments);
+  const orders = useSelector((state) => state.order?.orders);
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState(
-    <CreateWarehouseForm onSubmit={(e) => handleOk(e)} />
+    <CreateOrderForm onSubmit={(e) => handleOk(e)} />
   );
 
   const showModal = () => {
     setOpen(true);
   };
   const handleOk = async (e) => {
-    console.log(e);
+    let newdata = e;
+    newdata.date = Math.floor(Date.now() / 1000);
+    console.log(newdata);
     setConfirmLoading(true);
     setModalText("creating warehouse.....");
-    const response = await dispatch(createWarehouse(e));
+    const response = await dispatch(createOrder(e));
     if (response.status == 200) {
-      setModalText("Warehouse Created Succesfully");
+      setModalText("Order Created Succesfully");
       setTimeout(() => {
         setOpen(false);
         setConfirmLoading(false);
-        setModalText(<CreateWarehouseForm onSubmit={(e) => handleOk(e)} />);
+        setModalText(<CreateOrderForm onSubmit={(e) => handleOk(e)} />);
       }, 2000);
     } else {
       setModalText(response.response.data.error.message);
@@ -34,7 +36,7 @@ const Shipments = () => {
   const handleCancel = () => {
     setOpen(false);
     setConfirmLoading(false);
-    setModalText(<CreateWarehouseForm onSubmit={(e) => handleOk(e)} />);
+    setModalText(<CreateOrderForm onSubmit={(e) => handleOk(e)} />);
   };
   const columns = [
     {
@@ -50,9 +52,9 @@ const Shipments = () => {
     },
 
     {
-      title: "Shipping Method",
-      dataIndex: "shipping_method",
-      key: "shipping_method",
+      title: "Third Party",
+      dataIndex: "socid",
+      key: "third_party",
     },
     {
       title: "Status",
@@ -64,7 +66,7 @@ const Shipments = () => {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <a href={`/shipments/${record.id}`}>View {record.id}</a>
+          <a href={`/orders/${record.id}`}>View {record.id}</a>
           <a>Edit</a>
         </Space>
       ),
@@ -72,23 +74,33 @@ const Shipments = () => {
   ];
 
   const getCommonHandler = async () => {
-    await dispatch(getShipments());
+    await dispatch(getOrders());
   };
   useEffect(() => {
     getCommonHandler();
   }, []);
   return (
     <div>
+      <Modal
+        title="New Warehouse"
+        open={open}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+        footer={false}
+      >
+        {modalText}
+      </Modal>
       <Flex gap="small" justify="space-between">
-        <h1>Shipments</h1>
+        <h1>Orders</h1>
         <Button type="primary" onClick={showModal}>
-          Create New Shipment
+          Create New order
         </Button>
       </Flex>
 
-      <Table columns={columns} dataSource={shipments} />
+      <Table columns={columns} dataSource={orders} />
     </div>
   );
 };
 
-export default Shipments;
+export default Orders;

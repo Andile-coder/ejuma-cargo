@@ -42,6 +42,11 @@ const MainSideBar = () => {
       icon: <AiOutlineProduct />,
     },
     {
+      name: "Orders",
+      path: "/orders",
+      icon: <AiOutlineProduct />,
+    },
+    {
       name: "members",
       path: "/members",
       icon: <MdOutlineCardMembership />,

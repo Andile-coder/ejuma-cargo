@@ -3,18 +3,25 @@ import { createSlice } from "@reduxjs/toolkit";
 const orderSlice = createSlice({
   name: "order",
   initialState: {
-    order_detail: {},
+    order: {},
     orders: [],
   },
   reducers: {
-    setorders: (state, action) => {
+    setOrders: (state, action) => {
       state.orders = action.payload;
     },
     getOrders: (state) => {
       return state.orders;
     },
+    setOrder: (state, action) => {
+      state.order = action.payload;
+    },
     getOrder: (state) => {
-      return state.order_detail;
+      return state.order;
+    },
+    removeOrder: (state) => {
+      // call when you delete Shipment to remove from state
+      state.order = {};
     },
   },
 });

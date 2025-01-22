@@ -5,23 +5,28 @@ import {
   getWarehouseById,
 } from "../../../redux/actions/warehouseActions";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Popconfirm, message } from "antd";
+import { Button, Popconfirm, Space, Table, message } from "antd";
 import { notification } from "antd";
 import { Badge, Descriptions } from "antd";
+import {
+  deleteShipmentById,
+  getShipmentById,
+} from "../../../redux/actions/shipmentActions";
 
-const WarehouseDetailPage = () => {
+const ShipmentDetailPage = () => {
   const params = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const warehouseId = params.id;
-  const warehouse = useSelector((state) => state.warehouse.warehouse);
+  const shipmentId = params.id;
+  const shipment = useSelector((state) => state.shipment.shipment);
+
   const [api, contextHolder] = notification.useNotification();
 
   const getCommonHandler = async () => {
-    await dispatch(getWarehouseById(warehouseId));
+    await dispatch(getShipmentById(shipmentId));
   };
   const confirm = async () => {
-    const response = await dispatch(deleteWarehouseById(warehouseId));
+    const response = await dispatch(deleteShipmentById(shipmentId));
 
     if (response.status == 200) {
       api.success({
@@ -30,7 +35,7 @@ const WarehouseDetailPage = () => {
       });
 
       setTimeout(function () {
-        navigate("/warehouses");
+        navigate("/shipments");
       }, 2000);
     } else {
       api.error({
@@ -46,45 +51,41 @@ const WarehouseDetailPage = () => {
   const items = [
     {
       key: "1",
-      label: "Label",
-      children: `${warehouse.label}`,
+      label: "Ref Order:",
+      children: `${shipment.ref}`,
     },
     {
       key: "2",
-      label: "Short name of location",
-      children: `${warehouse.lieu}`,
+      label: "shipping_method",
+      children: `${shipment.shipping_method}`,
     },
-    {
-      key: "3",
-      label: "Project",
-      children: `${warehouse.fk_project}`,
-    },
+
     {
       key: "4",
       label: "Description",
-      children: `${warehouse.description}`,
+      children: `${shipment.description}`,
     },
     {
       key: "5",
       label: "Country Code",
-      children: `${warehouse.country_code}`,
+      children: `${shipment.country_code}`,
       span: 2,
     },
     {
       key: "6",
       label: "Status",
-      children: <Badge status="processing" text={warehouse.statut} />,
+      children: <Badge status="processing" text={shipment.statut} />,
       span: 3,
     },
     {
       key: "7",
       label: "Phone",
-      children: `${warehouse.phone}`,
+      children: `${shipment.phone}`,
     },
     {
       key: "8",
       label: "Date Creation",
-      children: `${warehouse.date_creation}`,
+      children: `${shipment.date_creation}`,
       span: 3,
     },
     // {
@@ -94,22 +95,37 @@ const WarehouseDetailPage = () => {
     // },
     {
       key: "10",
-      label: "Address",
-      children: (
+      label: "Products",
+      span: "filled",
+      children: shipment.lines?.map((line) => (
         <>
-          {warehouse.country_code}
-          <br />
-          {warehouse.town}
-          <br />
-          {warehouse.address}
-          <br />
-          {warehouse.zip}
+          {line.ref}
           <br />
         </>
-      ),
+      )),
     },
   ];
 
+  const columns = [
+    {
+      title: "Products",
+      dataIndex: "ref",
+      key: "ref",
+    },
+
+    {
+      title: "Qty Ordered",
+      dataIndex: "qty",
+      key: "ref_customer",
+    },
+
+    {
+      title: "Weight",
+      dataIndex: "weight",
+      key: "weight",
+      render: (_, record) => `${record.weight} KG`,
+    },
+  ];
   useEffect(() => {
     getCommonHandler();
   }, []);
@@ -118,11 +134,15 @@ const WarehouseDetailPage = () => {
     <div>
       {contextHolder}
       <h1></h1>
-      <Descriptions title={warehouse.label} bordered items={items} />
-      <div style={{ height: "40px" }}></div>
+      <Descriptions title={shipment.ref} bordered items={items} />
+      <div style={{ margin: "40px 0px" }}>
+        <h1>Products</h1>
+      </div>
+
+      <Table columns={columns} dataSource={shipment.lines} />
       <Popconfirm
-        title="Delete the task"
-        description="Are you sure to delete this task?"
+        title="Delete Shipment"
+        description="Are you sure to delete this Shipment?"
         onConfirm={confirm}
         onCancel={cancel}
         okText="Yes"
@@ -136,4 +156,4 @@ const WarehouseDetailPage = () => {
   );
 };
 
-export default WarehouseDetailPage;
+export default ShipmentDetailPage;

@@ -16,6 +16,9 @@ import Shipments from "./pages/shipments/Shipments.jsx";
 import Jobs from "./pages/jobs/Jobs.jsx";
 import Map from "./pages/map/Map.jsx";
 import WarehouseDetailPage from "./pages/warehouse/WarehouseDetailPage.jsx";
+import ShipmentDetailPage from "./pages/shipments/ShipmentDetailPage.jsx";
+import Orders from "./pages/orders/Orders.jsx";
+import OrderDetailPage from "./pages/orders/OrderDetailPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -72,11 +75,44 @@ const router = createBrowserRouter([
     loader: () => Promise.resolve({}),
   },
   {
+    path: "/shipments/:id",
+    element: (
+      <App state="private">
+        <PrivateRoute>
+          <ShipmentDetailPage />
+        </PrivateRoute>
+      </App>
+    ),
+    loader: () => Promise.resolve({}),
+  },
+  {
     path: "/products",
     element: (
       <App state="private">
         <PrivateRoute>
           <Products />
+        </PrivateRoute>
+      </App>
+    ),
+    loader: () => Promise.resolve({}),
+  },
+  {
+    path: "/orders",
+    element: (
+      <App state="private">
+        <PrivateRoute>
+          <Orders />
+        </PrivateRoute>
+      </App>
+    ),
+    loader: () => Promise.resolve({}),
+  },
+  {
+    path: "/orders/:id",
+    element: (
+      <App state="private">
+        <PrivateRoute>
+          <OrderDetailPage />
         </PrivateRoute>
       </App>
     ),

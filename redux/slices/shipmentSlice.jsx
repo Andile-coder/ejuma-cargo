@@ -10,6 +10,13 @@ const shipmentSlice = createSlice({
     setShipments: (state, action) => {
       state.shipments = action.payload;
     },
+    setShipment: (state, action) => {
+      state.shipment = action.payload;
+    },
+    removeShipment: (state) => {
+      // call when you delete Shipment to remove from state
+      state.shipment = {};
+    },
   },
 });
 
