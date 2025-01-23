@@ -7,6 +7,7 @@ const commonSlice = createSlice({
     message: "",
     description: "",
     sidebarCollapse: false,
+    userLocation: [],
   },
   reducers: {
     setNotification: (state, action) => {
@@ -17,6 +18,10 @@ const commonSlice = createSlice({
 
     setSidebarCollape: (state) => {
       state.sidebarCollapse = !state.sidebarCollapse;
+    },
+
+    setLocation: (state, action) => {
+      state.userLocation = action.payload;
     },
   },
 });
