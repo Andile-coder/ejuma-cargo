@@ -1,11 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
-import {
-  deleteWarehouseById,
-  getWarehouseById,
-} from "../../../redux/actions/warehouseActions";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Popconfirm, Space, Table, message } from "antd";
+import { Button, Popconfirm, Table, message } from "antd";
 import { notification } from "antd";
 import { Badge, Descriptions } from "antd";
 import {
