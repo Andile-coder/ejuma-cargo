@@ -126,22 +126,22 @@ export const createOrderShipment = ({ id, warehouse_id }) => {
     const handleCreateOrder = async ({ id, warehouse_id }) => {
       const token = sessionStorage.getItem("token");
       const response = await axiosInstance.post(
-        `/orders/${id}/shipment/${warehouse_id}`,
+        `orders/${id}/shipment/${warehouse_id}`,
+        {},
         {
           headers: {
-            "Content-Type": "Application/json",
+            "Content-Type": "application/json",
             Accept: "application/json",
             DOLAPIKEY: token,
           },
         }
       );
-      console.log("response create shipment for order", response);
+
       return response;
     };
 
     try {
       const res = await handleCreateOrder({ id, warehouse_id });
-      console.log("response create shipment for order", res);
 
       if (res.status == 200) {
         // dispatch(warehouseActions.removeWarehouse());

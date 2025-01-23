@@ -19,7 +19,6 @@ import {
   deleteOrderById,
   getOrderById,
 } from "../../../redux/actions/orderActions";
-import { warehouseActions } from "../../../redux/slices/warehouseSlice";
 import { getWarehouses } from "../../../redux/actions/warehouseActions";
 
 const OrderDetailPage = () => {
@@ -31,38 +30,38 @@ const OrderDetailPage = () => {
   const [api, contextHolder] = notification.useNotification();
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const handleOk = async (e) => {
+    let newdata = e;
+    newdata.date = Math.floor(Date.now() / 1000);
+    setConfirmLoading(true);
+    setModalText("creating shipment.....");
+    const response = await dispatch(
+      createOrderShipment({ id: orderId, warehouse_id: 1 })
+    );
+
+    if (response.status == 200) {
+      setModalText("shipment Created Succesfully");
+      setTimeout(() => {
+        setOpen(false);
+        setConfirmLoading(false);
+        setModalText(<WareHouseList order_id={orderId} onSubmit={handleOk} />);
+      }, 2000);
+    } else {
+      setModalText(response.response.data.error.message);
+    }
+  };
   const [modalText, setModalText] = useState(
-    <WareHouseList order_id={orderId} />
+    <WareHouseList order_id={orderId} onSubmit={handleOk} />
   );
 
   const showModal = () => {
     setOpen(true);
   };
 
-  const handleOk = async (e) => {
-    let newdata = e;
-    newdata.date = Math.floor(Date.now() / 1000);
-    console.log(newdata);
-    setConfirmLoading(true);
-    setModalText("creating shipment.....");
-    const response = await dispatch(
-      createOrderShipment({ id: orderId, warehouse_id: 1 })
-    );
-    if (response.status == 200) {
-      setModalText("shipment Created Succesfully");
-      setTimeout(() => {
-        setOpen(false);
-        setConfirmLoading(false);
-        setModalText(<WareHouseList order_id={orderId} />);
-      }, 2000);
-    } else {
-      setModalText(response.response.data.error.message);
-    }
-  };
   const handleCancel = () => {
     setOpen(false);
     setConfirmLoading(false);
-    setModalText(<WareHouseList order_id={orderId} />);
+    setModalText(<WareHouseList order_id={orderId} onSubmit={handleOk} />);
   };
 
   const getCommonHandler = async () => {
@@ -203,6 +202,11 @@ const OrderDetailPage = () => {
       </Modal>
       <Flex gap="small" justify="space-between">
         <Button type="primary" onClick={showModal}>
+          Validate Order
+        </Button>
+      </Flex>
+      <Flex gap="small" justify="space-between">
+        <Button type="primary" onClick={showModal}>
           Create Shipment
         </Button>
       </Flex>
@@ -212,7 +216,7 @@ const OrderDetailPage = () => {
 
 export default OrderDetailPage;
 
-const WareHouseList = ({ order_id }) => {
+const WareHouseList = ({ order_id, onSubmit }) => {
   const [value, setValue] = useState(1);
   const warehouses = useSelector((state) => state.warehouse.warehouses);
   const dispatch = useDispatch();
@@ -226,18 +230,11 @@ const WareHouseList = ({ order_id }) => {
     gap: 8,
   };
 
-  const handleCreateShipment = async (e) => {
-    e.id = order_id;
-    console.log(e);
-    await dispatch(
-      createOrderShipment({ id: e.id, warehouse_id: e.warehouse_id })
-    );
-  };
   useEffect(() => {
     dispatch(getWarehouses());
   }, []);
   return (
-    <Form onFinish={handleCreateShipment}>
+    <Form onFinish={onSubmit}>
       <Form.Item
         name="warehouse_id"
         rules={[

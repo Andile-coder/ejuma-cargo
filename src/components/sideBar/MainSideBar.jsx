@@ -6,20 +6,28 @@ import { GoBriefcase } from "react-icons/go";
 import { TbMap2 } from "react-icons/tb";
 import { FaTaxi } from "react-icons/fa6";
 import { MdOutlineDashboard } from "react-icons/md";
-
+import { IoIosLogOut } from "react-icons/io";
 import { Layout, Menu } from "antd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { logout } from "../../../redux/actions/authActions";
 
 const { Sider } = Layout;
 
 const MainSideBar = () => {
   const sidebarCollapse = useSelector((state) => state.common.sidebarCollapse);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onSidebarItemClick = (elem) => {
     navigate(elem.path);
   };
+
+  const handleLogout = async () => {
+    await dispatch(logout());
+    window.location.reload(false);
+  };
+
   const private_pages = [
     {
       name: "dashboard",
@@ -66,6 +74,11 @@ const MainSideBar = () => {
       path: "/map",
       icon: <TbMap2 />,
     },
+    {
+      name: "Logout",
+      path: "/login",
+      icon: <IoIosLogOut />,
+    },
   ];
 
   return (
@@ -80,7 +93,13 @@ const MainSideBar = () => {
           label: elem.name,
           icon: elem.icon,
         }))}
-        onClick={(elem) => onSidebarItemClick(private_pages[elem.key])}
+        onClick={(elem) => {
+          if (private_pages[elem.key]?.path == "/login") {
+            handleLogout();
+          } else {
+            onSidebarItemClick(private_pages[elem.key]);
+          }
+        }}
       />
     </Sider>
   );

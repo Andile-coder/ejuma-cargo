@@ -1,3 +1,4 @@
+import { message } from "antd";
 import { axiosInstance } from "../../config";
 import { authActions } from "../slices/authSlice";
 
@@ -66,6 +67,26 @@ export const login = ({ username, password, reset }) => {
         console.log("user", user_response);
       }
 
+      return res;
+    } catch (error) {
+      return error;
+    }
+  };
+};
+
+export const logout = () => {
+  return async (dispatch) => {
+    const handleLogout = () => {
+      sessionStorage.removeItem("token");
+      return { status: 200, message: "Logout Successful!" };
+    };
+
+    try {
+      const res = await handleLogout();
+
+      if (res.status == 200) {
+        dispatch(authActions.logout());
+      }
       return res;
     } catch (error) {
       return error;
